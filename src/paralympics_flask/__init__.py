@@ -34,7 +34,7 @@ def create_app(test_config=None):
         db.create_all()
         add_data_from_csv()
 
-        from src.paralympics_flask import views
+        from paralympics_flask import views
 
     return app
 

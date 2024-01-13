@@ -142,7 +142,8 @@ row_three = dbc.Row([
 # code continues... 
 ```
 
-If the app is running and your code did not fail, then it should now display the chart you created.
+If the app is running and your code did not fail, then it should now display the chart you created. If the app is not
+running, then run it.
 
 ### Style the line chart
 
@@ -186,4 +187,14 @@ fig = px.line(line_chart_data,
               )
 ```
 
+Check the app is running, it should now display the line chart with the revised styling.
 
+## Create a bar chart
+
+Create a stacked bar chart that shows the ratio of female:male competitors for either winter or summer events.
+
+This requires further manipulation of the DataFrame before the chart can be created.
+
+Add the code to `figures.py`
+
+> NOT COMPLETE YET!
