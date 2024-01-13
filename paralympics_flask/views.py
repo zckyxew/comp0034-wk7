@@ -1,7 +1,7 @@
 from flask import current_app as app, render_template
 
 
-# COMPLETED EXAMPLES OF WEEK6 ACTIVITIES
+# COMPLETED EXAMPLES OF WEEK 6 ACTIVITIES
 # You can delete these once you've compared them to your work
 @app.route('/html', methods=['GET'])
 def index_html():
@@ -11,12 +11,20 @@ def index_html():
     return render_template('index_html.html')
 
 
-@app.route('/html', methods=['GET'])
+@app.route('/css', methods=['GET'])
 def index_css():
     """
     Returns a view using a basic HTML template with Bootstrap CSS.
     """
     return render_template('index_css.html')
+
+
+@app.route('/responsive', methods=['GET'])
+def index_responsive():
+    """
+    Returns a view using Bootstrap CSS and defines the viewport.
+    """
+    return render_template('index_responsive.html')
 
 
 @app.route('/jinja', methods=['GET'])
@@ -31,6 +39,8 @@ def index_jinja():
 @app.route('/', methods=['GET'])
 def index():
     """
-    Returns the home page to use as the start for week 7 activities.
+    Returns the home page.
+
+     Use as the starting point for week 7 activities.
     """
-    return render_template('index_jinja.html')
+    return render_template('index.html')

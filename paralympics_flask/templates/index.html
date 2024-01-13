@@ -1,11 +1,8 @@
-<!DOCTYPE html>
 <!-- Week 7 starter code version -->
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Home page with basic HTML</title>
-</head>
-<body>
-    <p>Welcome to HTML!</p>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <p>This is the {{ self.title() }} page.</p>
+{% endblock %}
