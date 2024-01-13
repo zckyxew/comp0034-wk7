@@ -1,5 +1,5 @@
 [project]
-name = "comp0034-wk7"
+name = "paralympics"
 version = "1"
 description = "Week 7 coding activities"
 dependencies = [
@@ -8,7 +8,8 @@ dependencies = [
     "Flask-SQLAlchemy",
     # For Dash apps
     "dash",
-    "dash-bootstrap-components"
+    "dash-bootstrap-components",
+    "pandas"
 ]
 
 # https://setuptools.pypa.io/en/latest/userguide/pyproject_config.html
@@ -17,6 +18,5 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
-where = ["."]  # list of folders that contain the packages (["."] by default)
-include = ["paralympics_dash", "paralympics_flask"]
+where = ["src"]  # list of folders that contain the packages (["."] by default)
 namespaces = false  # to disable scanning PEP 420 namespaces (true by default)

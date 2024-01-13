@@ -8,7 +8,7 @@ def index_html():
     """
     Returns a view using a basic HTML template with no CSS or Jinja.
     """
-    return render_template('index_html.html')
+    return render_template('templates/index_html.html')
 
 
 @app.route('/css', methods=['GET'])
@@ -16,7 +16,7 @@ def index_css():
     """
     Returns a view using a basic HTML template with Bootstrap CSS.
     """
-    return render_template('index_css.html')
+    return render_template('templates/index_css.html')
 
 
 @app.route('/responsive', methods=['GET'])
@@ -24,7 +24,7 @@ def index_responsive():
     """
     Returns a view using Bootstrap CSS and defines the viewport.
     """
-    return render_template('index_responsive.html')
+    return render_template('templates/index_responsive.html')
 
 
 @app.route('/jinja', methods=['GET'])
@@ -32,7 +32,7 @@ def index_jinja():
     """
     Returns a view using a child Jinja template with Bootstrap CSS.
     """
-    return render_template('index_jinja.html')
+    return render_template('templates/index_jinja.html')
 
 
 # STARTER CODE FOR ACTIVITY 7
@@ -43,4 +43,4 @@ def index():
 
      Use as the starting point for week 7 activities.
     """
-    return render_template('index.html')
+    return render_template('templates/index.html')

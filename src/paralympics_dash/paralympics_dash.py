@@ -1,4 +1,4 @@
-# This version is after the final activity in week 7
+# Version after the final activity in week 6
 from dash import Dash, html
 import dash_bootstrap_components as dbc
 
@@ -47,7 +47,7 @@ card = dbc.Card(
 )
 
 dropdown = dbc.Select(
-    id="type-dropdown", # id uniquely identifies the element, will be needed later
+    id="type-dropdown",  # id uniquely identifies the element, will be needed later
     options=[
         {"label": "Events", "value": "events"},
         # The value is in the format of the column heading in the data
@@ -67,43 +67,39 @@ checklist = dbc.Checklist(
     id="checklist-input",
 )
 
-row_one = html.Div(
-    dbc.Row([
-        dbc.Col([html.H1("Paralympics Dashboard"), html.P(
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent congue luctus elit nec gravida. Fusce "
-            "efficitur posuere metus posuere malesuada. ")
-                 ], width=12),
-    ]),
-)
+row_one = dbc.Row([
+    dbc.Col([html.H1("Paralympics Dashboard"), html.P(
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent congue luctus elit nec gravida. Fusce "
+        "efficitur posuere metus posuere malesuada. ")
+             ], width=12),
+]),
 
-row_two = html.Div(
-    dbc.Row([
-        dbc.Col(children=[
-            dropdown
-        ], width=2),
-        dbc.Col(children=[
-            html.Img(src=app.get_asset_url('line-chart-placeholder.png'), className="img-fluid"),
-        ], width=4),
-        dbc.Col(children=[
-            # see checklist variable defined earlier
-            checklist,
-        ], width=2),
-        dbc.Col(children=[
-            html.Img(src=app.get_asset_url('bar-chart-placeholder.png'), className="img-fluid"),
-        ], width=4),
-    ], align="start")
-)
+row_two = dbc.Row([
+    dbc.Col(children=[
+        dropdown
+    ], width=2),
+    dbc.Col(children=[
+        checklist,
+    ], width={"size": 2, "offset": 4}),
+], align="start")
 
-row_three = html.Div(
-    dbc.Row([
-        dbc.Col(children=[
-            html.Img(src=app.get_asset_url('map-placeholder.png'), className="img-fluid"),
-        ], width=8),
-        dbc.Col(children=[
-            card,
-        ], width=4),
-    ], align="start")
-)
+row_three = dbc.Row([
+    dbc.Col(children=[
+        html.Img(src=app.get_asset_url('line-chart-placeholder.png'), className="img-fluid"),
+    ], width=4),
+    dbc.Col(children=[
+        html.Img(src=app.get_asset_url('bar-chart-placeholder.png'), className="img-fluid"),
+    ], width=4),
+], align="start")
+
+row_four = dbc.Row([
+    dbc.Col(children=[
+        html.Img(src=app.get_asset_url('map-placeholder.png'), className="img-fluid"),
+    ], width=8),
+    dbc.Col(children=[
+        card,
+    ], width=4),
+], align="start")
 
 # Add an HTML layout to the Dash app.
 # The layout is wrapped in a DBC Container()
@@ -111,6 +107,7 @@ app.layout = dbc.Container([
     row_one,
     row_two,
     row_three,
+    row_four
 ])
 
 # Run the Dash app
