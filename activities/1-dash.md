@@ -34,13 +34,12 @@ then try one of the many tools to help you select the type of chart/data visuali
 
 This activity covers the following data visualisations:
 
-1. line chart
-2. bar chart
-3. map with markers
-4. summary statistics presented in card format
+1. Line chart (data access: .csv, plotly library: Plotly Express)
+2. Bar chart (data access: .csv, plotly library: Plotly Express)
+3. Map with markers (data access: SQLite, plotly library: Plotly Go)
+4. Summary statistics presented in card format (data access: REST API)
 
-The first two access data from a pandas DataFrame; the third from a SQLite database; and the final one uses data from a
-REST API. This is to introduce different ways of accessing the data. For your coursework, pick one method to use.
+The examples use different ways to access the data. The purpose of this is to introduce different ways of accessing the data. For your coursework you don't need to do this, pick one method to use.
 
 The general approach to create and add a chart to a Dash application is:
 
@@ -191,10 +190,25 @@ Check the app is running, it should now display the line chart with the revised 
 
 ## Create a bar chart
 
+### Create the chart using pandas and Plotly Express
+
 Create a stacked bar chart that shows the ratio of female:male competitors for either winter or summer events.
 
 This requires further manipulation of the DataFrame before the chart can be created.
 
-Add the code to `figures.py`
+Add the code to `figures.py`:
 
-> NOT COMPLETE YET!
+```python
+```
+
+### Add styling
+
+Have a look at styling options and try and change some of the [styling options](https://plotly.com/python/styling-plotly-express/) of the bar chart e.g. add a title, change the colour of the bars.
+
+## Challenge: Create and add another chart
+
+This is optional for those that want to try and challenge themselves. There is no prepared solution for this.
+
+- Use the event_data in the `figures.py`
+- Create a new Plotly Expres chart .e.g. [bubble chart](https://plotly.com/python/bubble-charts/) or choose another [chart type](https://plotly.com/python/basic-charts/)
+- You will need to add a new column to the layout to place the dcc.Graph() in.
