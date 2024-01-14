@@ -68,11 +68,11 @@ checklist = dbc.Checklist(
 )
 
 row_one = dbc.Row([
-    dbc.Col([html.H1("Paralympics Dashboard"), html.P(
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent congue luctus elit nec gravida. Fusce "
-        "efficitur posuere metus posuere malesuada. ")
-             ], width=12),
-]),
+    dbc.Col([
+        html.H1("Paralympics Dashboard"), 
+        html.P("Use the charts to help answer the questions."),
+             ], width=12)
+])
 
 row_two = dbc.Row([
     dbc.Col(children=[
@@ -107,7 +107,7 @@ app.layout = dbc.Container([
     row_one,
     row_two,
     row_three,
-    row_four
+    row_four,
 ])
 
 # Run the Dash app

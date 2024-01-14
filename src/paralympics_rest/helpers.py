@@ -2,8 +2,8 @@ from datetime import datetime, timedelta
 from functools import wraps
 import jwt
 from flask import request, make_response, current_app as app
-from paralympics import db
-from paralympics.models import User
+from paralympics_rest import db
+from paralympics_rest.models import User
 
 
 def token_required(f):

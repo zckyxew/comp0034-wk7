@@ -1,5 +1,4 @@
 import os
-import logging
 from pathlib import Path
 
 import csv
@@ -37,6 +36,11 @@ ma = Marshmallow()
 
 
 def create_app(test_config=None):
+    """Create and configure an instance of the Flask application.
+
+    Args: config
+    Returns: app
+    """
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
 
@@ -60,12 +64,6 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # Configure logging first
-    configure_logging(app)
-
-    # Log events to the logger
-    app.logger.debug(f"Using Database: {app.config.get('SQLALCHEMY_DATABASE_URI')}")
-
     # Register the custom 404 error handler that is defined in this python file
     app.register_error_handler(401, handle_404_error)
 
@@ -77,7 +75,7 @@ def create_app(test_config=None):
 
     # Models are defined in the models module, so you must import them before calling create_all, otherwise SQLAlchemy
     # will not know about them.
-    from models import User, Region, Event
+    from paralympics_rest.models import User, Region, Event
     # Create the tables in the database
     # create_all does not update tables if they are already in the database.
     with app.app_context():
@@ -94,12 +92,12 @@ def add_data_from_csv():
     """Adds data to the database if it does not already exist."""
 
     # Add import here and not at the top of the file to avoid circular import issues
-    from paralympics.models import Region, Event
+    from paralympics_rest.models import Region, Event
 
     # If there are no regions in the database, then add them
     first_region = db.session.execute(db.select(Region)).first()
     if not first_region:
-        noc_file = Path(__file__).parent.parent.joinpath("data", "noc_regions.csv")
+        noc_file = Path(__file__).parent.parent.parent.joinpath("data", "noc_regions.csv")
         with open(noc_file, 'r') as file:
             csv_reader = csv.reader(file)
             next(csv_reader)  # Skip header row
@@ -112,14 +110,11 @@ def add_data_from_csv():
     # If there are no Events, then add them
     first_event = db.session.execute(db.select(Event)).first()
     if not first_event:
-        event_file = Path(__file__).parent.parent.joinpath("data", "paralympic_events.csv")
+        event_file = Path(__file__).parent.parent.parent.joinpath("data", "paralympic_events.csv")
         with open(event_file, 'r') as file:
             csv_reader = csv.reader(file)
             next(csv_reader)  # Skip header row
             for row in csv_reader:
-                # row[0] is the first column, row[1] is the second column etc
-                # type0,year1,country2,host3,NOC4,start5,end6,duration7,disabilities_included8,countries9,events10,
-                # sports11,participants_m12,participants_f13,participants14,highlights15
                 e = Event(type=row[0],
                           year=row[1],
                           country=row[2],
@@ -139,17 +134,3 @@ def add_data_from_csv():
                 db.session.add(e)
             db.session.commit()
 
-
-def configure_logging(app):
-    """ Configures Flask logging to a file.
-
-    Logging level is set to DEBUG when testing which generates more detail.
-    """
-    logging.basicConfig(format='[%(asctime)s] %(levelname)s %(name)s: %(message)s')
-    if app.config['TESTING']:
-        logging.getLogger().setLevel(logging.DEBUG)
-        handler = logging.FileHandler('paralympics_tests.log')  # Log to a file
-    else:
-        logging.getLogger().setLevel(logging.INFO)
-        handler = logging.FileHandler('paralympics.log')  # Log to a file
-    app.logger.addHandler(handler)
