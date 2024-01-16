@@ -397,5 +397,7 @@ This is optional for those that want to try and challenge themselves. There is n
 - Add the chart to a dcc.Graph() element in one of the columns you created.
 
 Rather than using a card to display the statistics, create
-a [table](https://dash-bootstrap-components.opensource.faculty.ai/docs/components/table/). Add different event
+a [table](https://dash-bootstrap-components.opensource.faculty.ai/docs/components/table/) instead (or as well). Add different event
 attributes to what was used in the Card example.
+
+

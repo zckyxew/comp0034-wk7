@@ -1,5 +1,7 @@
 # COMP0034 Week 7 Coding activities
 
+TODO: No ML model yet in the Flask app.
+
 ## Set-up
 
 1. Fork the repository
