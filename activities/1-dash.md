@@ -1,12 +1,11 @@
 # Plotly Dash version of the activities: Creating and adding charts to a Dash app layout
 
+The text below assumes you are using the single page app in paralympics_dash. You could instead apply the same to the
+multi-page app in paralympics_dash_multi editing the layouts in the pages rather than the main dashboard python file.
+
 ## Check the Dash app runs
 
-1. `python paralympics_dash/paralympics_dash.py`
-
-   You may need to change the port number if you already have something running on the default port 8050
-   e.g. `flask --app paralympics_flask run --debug --port=5050`.
-
+1. `python src/paralympics_dash/paralympics_dash.py`
 2. Go to the URL that is shown in the terminal. By default, this is <http://127.0.0.1:8050>.
 3. Stop the app using `CTRL+C`
 
@@ -36,10 +35,11 @@ This activity covers the following data visualisations:
 
 1. Line chart (data access: .csv, plotly library: Plotly Express)
 2. Bar chart (data access: .csv, plotly library: Plotly Express)
-3. Map with markers (data access: SQLite, plotly library: Plotly Go)
+3. Scatter Mapbox, map with markers (data access: SQLite, plotly library: Plotly Go)
 4. Summary statistics presented in card format (data access: REST API)
 
-The examples use different ways to access the data. The purpose of this is to introduce different ways of accessing the data. For your coursework you don't need to do this, pick one method to use.
+The examples use different ways to access the data. The purpose of this is to introduce different ways of accessing the
+data. For your coursework you don't need to do this, pick one method to use.
 
 The general approach to create and add a chart to a Dash application is:
 
@@ -47,7 +47,7 @@ The general approach to create and add a chart to a Dash application is:
 2. Create a chart object using the data
 3. Add the chart object to the Dash app layout
 
-## Line chart
+## 1. Line chart
 
 ### Create a line chart using pandas and Plotly Express
 
@@ -188,27 +188,214 @@ fig = px.line(line_chart_data,
 
 Check the app is running, it should now display the line chart with the revised styling.
 
-## Create a bar chart
+## 2. Bar chart
 
 ### Create the chart using pandas and Plotly Express
 
 Create a stacked bar chart that shows the ratio of female:male competitors for either winter or summer events.
 
-This requires further manipulation of the DataFrame before the chart can be created.
+This requires further manipulation of the DataFrame before the chart can be created. See the comments in the code below.
 
 Add the code to `figures.py`:
 
 ```python
+def bar_gender(event_type):
+    """
+    Creates a stacked bar chart showing change in the number of sports in the summer and winter paralympics
+    over time
+    An example for exercise 2.
+
+    :param event_type: str Winter or Summer
+    :return: Plotly Express bar chart
+    """
+    cols = ['type', 'year', 'host', 'participants_m', 'participants_f', 'participants']
+    df_events = pd.read_csv(event_data, usecols=cols)
+    # Drop Rome as there is no male/female data
+    df_events.drop([0], inplace=True, )
+    df_events.reset_index(drop=True)
+    # Add new columns that each contain the result of calculating the % of male and female participants
+    df_events['M%'] = df_events['participants_m'] / df_events['participants']
+    df_events['F%'] = df_events['participants_f'] / df_events['participants']
+    # Sort the values by Type and Year
+    df_events.sort_values(['type', 'year'], ascending=(True, True), inplace=True)
+    # Create a new column that combines Location and Year to use as the x-axis
+    df_events['xlabel'] = df_events['host'] + ' ' + df_events['year'].astype(str)
+    # Create the stacked bar plot of the % for male and female
+    df_events = df_events.loc[df_events['type'] == event_type]
+    fig = px.bar(df_events,
+                 x='xlabel',
+                 y=['M%', 'F%'],
+                 title='How has the ratio of female:male participants changed?',
+                 labels={'xlabel': '', 'value': '', 'variable': ''},
+                 color_discrete_map={'M%': 'blue', 'F%': 'green'},
+                 template="simple_white"
+                 )
+    fig.update_xaxes(ticklen=0)
+    return fig
 ```
 
 ### Add styling
 
-Have a look at styling options and try and change some of the [styling options](https://plotly.com/python/styling-plotly-express/) of the bar chart e.g. add a title, change the colour of the bars.
+Have a look at styling options and try and change some of
+the [styling options](https://plotly.com/python/styling-plotly-express/) of the bar chart e.g. add a title, change the
+colour of the bars.
 
-## Challenge: Create and add another chart
+## 3. Scatter Mapbox
+
+You need to have the latitude and longitude of each event. These have been added to the SQLite database in a locations
+table.
+
+In week 2 we looked at creating a database using SQLite. One method is to use the sqlite3 library to create a database
+connection and create a cursor to execute queries. The following code uses pandas to read from a SQLite database.
+
+```python
+paralympic_db = Path(__file__).parent.joinpath("paralympics.sqlite")
+
+
+def scatter_geo():
+    # create database connection
+    connection = sqlite3.connect(paralympic_db)
+
+    # define the sql query
+    sql = '''
+        SELECT event.id, event.host, event.year, location.lat, location.lon
+        FROM event
+        JOIN location ON event.host = location.city 
+        '''
+
+    df_locs = pd.read_sql(sql=sql, con=connection, index_col=None)
+    # The lat and lon are stored as string but need to be floats for the scatter_geo
+    df_locs['lon'] = df_locs['lon'].astype(float)
+    df_locs['lat'] = df_locs['lat'].astype(float)
+    # Adds a new column that concatenates the city and year e.g. Barcelona 2012
+    df_locs['name'] = df_locs['host'] + ' ' + df_locs['year'].astype(str)
+
+    fig = px.scatter_geo(df_locs,
+                         lat=df_locs.lat,
+                         lon=df_locs.lon,
+                         hover_name=df_locs.name,
+                         title="Where have the paralympics been held?",
+                         )
+    return fig 
+```
+
+In paralympics_dash.py add code to create the figure using the function above, e.g.
+
+```python
+from figures import scatter_geo
+
+# Create the scatter map
+map = scatter_geo()
+```
+
+In the layout for row 3 add the dcc.Graph() and remove the placeholder image, e.g.
+
+```python
+row_four = dbc.Row([
+    dbc.Col(children=[
+        dcc.Graph(id="map", figure=map)
+        # html.Img(src=app.get_asset_url('map-placeholder.png'), className="img-fluid"),
+    ], width=8),
+    dbc.Col(children=[
+        card,
+    ], width=4),
+], align="start")
+```
+
+Run the app if not already running. You should see a map of the world with small dots for each event. When you hover on
+a dot it will show the city and year.
+
+There are options for styling the markers, though this requires some Plotly Go syntax. Refer to the [Plotly maps
+documentation](https://plotly.com/python/scatter-plots-on-maps/) if you want to try to change the marker styles.
+
+## 4. Card
+
+The last example isn't a figure. This is a Bootstrap card using
+the [dash-bootstrap-components card](https://dash-bootstrap-components.opensource.faculty.ai/docs/components/card/).
+
+It will display the details for a selected event. Next week you will add a callback that changes the event card based on
+clicks on the map markers.
+
+For this example, we will use the REST API route /events/<event_id>. You need to make sure that the REST API app is
+running on your computer, to run it: `flask --app paralympics_rest run --debug`
+
+To get data from an API you can use the Python requests library (part of the Python base library, you don't need to
+install it separately).
+
+The code to generate the card is moved into a function.
+
+- The function takes an event id.
+- It uses requests to make a request to the `http://127.0.0.1:5000/events/<event_id>` route using the event id passed to
+  the function to generate the url string.
+- The response from the request contains json.
+- Variables to created with values from the json object.
+- The card html is generated with the variables
+
+```python
+def create_card(event_id):
+    """
+    Generate a card for the event specified by event_id.
+
+    Uses the REST API route.
+
+    Args:
+        event_id:
+
+    Returns:
+        card: dash boostrap components card for the event
+    """
+    # Use python requests to access your REST API on your localhost
+    # Make sure you run the REST APP first and check your port number if you changed it from the default 5000
+    url = f"http://127.0.0.1:5000/events/{event_id}"
+    event_response = requests.get(url)
+    ev = event_response.json()
+
+    # Variables for the card contents
+    logo = f'logos/{ev['year']}_{ev['host']}.jpg'
+    dates = f'{ev['start']} to {ev['end']}'
+    host = f'{ev['host']} {ev['year']}'
+    highlights = f'Highlights: {ev['highlights']}'
+    participants = f'{ev['participants']} athletes'
+    events = f'{ev['events']} events'
+    countries = f'{ev['countries']} countries'
+
+    card = dbc.Card([
+        dbc.CardBody(
+            [
+                html.H4([html.Img(src=app.get_asset_url(logo), width=35, className="me-1"),
+                         host]),
+                html.Br(),
+                html.H6(dates, className="card-subtitle"),
+                html.P(highlights, className="card-text"),
+                html.P(participants, className="card-text"),
+                html.P(events, className="card-text"),
+                html.P(countries, className="card-text"),
+            ]
+        ),
+    ],
+        style={"width": "18rem"},
+    )
+    return card
+
+
+# Set to display event 12, this will be changed next week using a callback
+card = create_card(12)
+```
+
+This [Charming Data video](https://www.youtube.com/watch?v=NEMDvIUaI6A) has more detail on getting data from an API.
+
+This [Charming Data video](https://www.youtube.com/watch?v=THB9AEwdSXo) has more on the dbc Card.
+
+## Further practice
 
 This is optional for those that want to try and challenge themselves. There is no prepared solution for this.
 
+- Add a new Row() with one or more columns to the layout.
 - Use the event_data in the `figures.py`
-- Create a new Plotly Expres chart .e.g. [bubble chart](https://plotly.com/python/bubble-charts/) or choose another [chart type](https://plotly.com/python/basic-charts/)
-- You will need to add a new column to the layout to place the dcc.Graph() in.
+- Create a new Plotly Expres chart .e.g. [bubble chart](https://plotly.com/python/bubble-charts/) or choose
+  another [chart type](https://plotly.com/python/basic-charts/)
+- Add the chart to a dcc.Graph() element in one of the columns you created.
+
+Rather than using a card to display the statistics, create
+a [table](https://dash-bootstrap-components.opensource.faculty.ai/docs/components/table/). Add different event
+attributes to what was used in the Card example.

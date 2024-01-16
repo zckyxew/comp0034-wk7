@@ -66,6 +66,7 @@ def add_data_from_csv():
             csv_reader = csv.reader(file)
             next(csv_reader)
             for row in csv_reader:
+                # int rows end up as string if they are empty and None is not passed
                 e = Event(type=row[0],
                           year=row[1],
                           country=row[2],
@@ -75,12 +76,12 @@ def add_data_from_csv():
                           end=row[6],
                           duration=row[7],
                           disabilities_included=row[8],
-                          countries=row[9],
-                          events=row[10],
-                          sports=row[11],
-                          participants_m=row[12],
-                          participants_f=row[13],
-                          participants=row[14],
+                          countries=row[9] or None,
+                          events=row[10] or None,
+                          sports=row[11] or None,
+                          participants_m=row[12] or None,
+                          participants_f=row[13] or None,
+                          participants=row[14] or None,
                           highlights=row[15])
                 db.session.add(e)
             db.session.commit()
