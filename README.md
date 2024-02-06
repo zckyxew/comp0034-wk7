@@ -17,8 +17,19 @@ TODO: No ML model yet in the Flask app.
     - e.g. `pip install -r requirements.txt`
 6. Install the paralympics apps code e.g. `pip install -e .`
 
-## To run each app
-- REST API: `flask --app paralympics_rest run --debug`
+## Running the apps in the src directory
+
+This repository contains 4 apps used in the activities which may cause some confusion for imports.
+
+Remember to run `pip install -e .`
+
+The 4 apps can be run from the terminal as follows, you may need to use 'py' or 'python3' instead of 'python' depending
+on your computer:
+
+- Dash app: `python src/paralympics_dash/paralympics_dash.py`
+- Dash multi-page app: `python src/paralympics_dash_multi/paralympics_app.py`
+- Flask REST API app (coursework 1): `flask --app paralympics_rest run --debug`
+- Flask app: `flask --app paralympics_flask run --debug`
 
 ## Activity instructions
 
@@ -27,16 +38,3 @@ to use for coursework 2.
 
 1. [Dash activities](activities/1-dash.md)
 2. [Flask activities](activities/1-flask.md)
-
-## Running the apps in the src directory
-
-This repository contains 4 apps used in the activities which may cause some confusion for imports.
-
-You must remember to run `pip install -e .`
-
-The 4 apps can be run from the terminal as follows, you may need to use 'py' or 'python3' instead of 'python' depdending on your computer:
-
-- Dash app: `python src/paralympics_dash/paralympics_dash.py`
-- Dash multi-page app: `python src/paralympics_dash_multi/paralympics_app.py`
-- Flask REST API app (coursework 1): `flask --app paralympics_rest run --debug`
-- Flask app: `flask --app paralympics_flask run --debug`
