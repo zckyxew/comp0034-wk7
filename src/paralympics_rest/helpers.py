@@ -1,9 +1,9 @@
-from datetime import datetime, timedelta
+import datetime
 from functools import wraps
 import jwt
 from flask import request, make_response, current_app as app
-from paralympics_rest import db
-from paralympics_rest.models import User
+from paralympics import db
+from paralympics.models import User
 
 
 def token_required(f):
@@ -46,8 +46,8 @@ def encode_auth_token(user_id):
         token = jwt.encode(
             # Sets the token to expire in 5 mins
             payload={
-                "exp": datetime.utcnow() + timedelta(minutes=5),
-                "iat": datetime.utcnow(),
+                "exp": datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=5),
+                "iat": datetime.datetime.now(datetime.UTC),
                 "sub": user_id,
             },
             # Flask app secret key, matches the key used in the decode() in the decorator

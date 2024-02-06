@@ -1,8 +1,8 @@
 """
 Schemas for each of the models in the paralympics app.
 """
-from paralympics_rest.models import Event, Region, User
-from paralympics_rest import db, ma
+from paralympics.models import Event, Region, User
+from paralympics import db, ma
 
 
 # Flask-Marshmallow Schemas

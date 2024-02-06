@@ -1,11 +1,13 @@
+import datetime
+
 from flask import current_app as app, request, abort, jsonify, make_response
 from sqlalchemy import exc
 from marshmallow.exceptions import ValidationError
 
-from paralympics_rest import db
-from paralympics_rest.models import Region, Event, User
-from paralympics_rest.schemas import RegionSchema, EventSchema, UserSchema
-from paralympics_rest.helpers import encode_auth_token
+from paralympics import db
+from paralympics.models import Region, Event, User
+from paralympics.schemas import RegionSchema, EventSchema, UserSchema
+from paralympics.helpers import token_required, encode_auth_token
 
 # Flask-Marshmallow Schemas
 regions_schema = RegionSchema(many=True)
@@ -87,10 +89,12 @@ def add_region():
             db.session.commit()
             return {"message": f"Region added with NOC= {region.NOC}"}
         except exc.SQLAlchemyError as e:
+            app.logger.error(f"An error occurred saving the Region: {str(e)}")
             msg = {'message': "An Internal Server Error occurred."}
             return make_response(msg, 500)
 
     except ValidationError as e:
+        app.logger.error(f"A Marshmallow ValidationError loading the region: {str(e)}")
         msg = {'message': "The Region details failed validation."}
         return make_response(msg, 400)
 
@@ -110,6 +114,8 @@ def delete_region(noc_code):
         db.session.commit()
         return {"message": f"Region {noc_code} deleted."}
     except exc.SQLAlchemyError as e:
+        # Log the exception with the error
+        app.logger.error(f"A SQLAlchemy database error occurred: {str(e)}")
         # Report a 404 error to the user who made the request
         msg_content = f'Region {noc_code} not found.'
         msg = {'message': msg_content}
@@ -117,6 +123,7 @@ def delete_region(noc_code):
 
 
 @app.patch("/regions/<noc_code>")
+@token_required
 def update_region(noc_code):
     """Updates changed fields for the specified region.
 
@@ -130,21 +137,25 @@ def update_region(noc_code):
             If the update is not saved, return 500
             If all OK then return 200
     """
+    app.logger.error(f"Started the patch")
     # Find the region in the database
     try:
         existing_region = db.session.execute(
             db.select(Region).filter_by(NOC=noc_code)
         ).scalar_one_or_none()
     except exc.SQLAlchemyError as e:
+        app.logger.error(f"A SQLAlchemy database error occurred: {str(e)}")
         msg_content = f'Region {noc_code} not found'
         msg = {'message': msg_content}
         return make_response(msg, 404)
     # Get the updated details from the json sent in the HTTP patch request
     region_json = request.get_json()
+    app.logger.error(f"region_json: {str(region_json)}")
     # Use Marshmallow to update the existing records with the changes from the json
     try:
         region_update = region_schema.load(region_json, instance=existing_region, partial=True)
     except ValidationError as e:
+        app.logger.error(f"A Marshmallow schema validation error occurred: {str(e)}")
         msg = f'Failed Marshmallow schema validation'
         return make_response(msg, 500)
     # Commit the changes to the database
@@ -155,6 +166,7 @@ def update_region(noc_code):
         response = {"message": f"Region {noc_code} updated."}
         return response
     except exc.SQLAlchemyError as e:
+        app.logger.error(f"A SQLAlchemy database error occurred: {str(e)}")
         msg = f'An Internal Server Error occurred.'
         return make_response(msg, 500)
 
@@ -269,8 +281,11 @@ def register():
             response = {
                 "message": "Successfully registered.",
             }
+            # Log the registered user
+            app.logger.info(f"{user.email} registered at {datetime.datetime.now(datetime.UTC)}")
             return make_response(jsonify(response)), 201
         except exc.SQLAlchemyError as e:
+            app.logger.error(f"A SQLAlchemy database error occurred: {str(e)}")
             response = {
                 "message": "An error occurred. Please try again.",
             }
@@ -312,3 +327,4 @@ def login():
 
     # Return the token and the user_id of the logged in user
     return make_response(jsonify({"user_id": user.id, "token": token}), 201)
+
