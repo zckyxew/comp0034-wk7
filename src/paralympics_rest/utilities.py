@@ -1,9 +1,13 @@
 import datetime
 from functools import wraps
+from pathlib import Path
+
 import jwt
+import pandas as pd
 from flask import request, make_response, current_app as app
-from paralympics import db
-from paralympics.models import User
+
+from paralympics_rest import db
+from paralympics_rest.models import User, Region, Event
 
 
 def token_required(f):
@@ -32,6 +36,7 @@ def token_required(f):
             response = {"message": "Invalid or missing token."}
             return make_response(response, 401)
         return f(*args, **kwargs)
+
     return decorator
 
 
@@ -75,3 +80,38 @@ def decode_auth_token(auth_token):
         return make_response({'message': "Token expired. Please log in again."}, 401)
     except jwt.InvalidTokenError:
         return make_response({'message': "Invalid token. Please log in again."}, 401)
+
+
+def add_data(db):
+    """Adds data to the database if it does not already exist.
+
+    :param db: SQLAlchemy database for the app
+    """
+    # Create a connection to the REST API sqlite database usinf FlaskSQLAlchemy
+    connection = db.engine.connect()
+
+    # If there are no regions in the database, then add them
+    first_region = db.session.execute(db.select(Region)).first()
+    if not first_region:
+        print("Start adding region data to the database")
+        region_file = Path(__file__).parent.parent.parent.joinpath("data", "noc_regions.csv")
+        # Read the noc_regions data to a pandas dataframe
+        na_values = [""]
+        regions_df = pd.read_csv(region_file, keep_default_na=False, na_values=na_values)
+        # Write the values to the database table
+        regions_df.to_sql("region", connection, if_exists="append", index=False)
+
+    # If there are no Events, then add them
+    first_event = db.session.execute(db.select(Event)).first()
+    if not first_event:
+        # Read the paralympics event data to a pandas dataframe
+        event_file = Path(__file__).parent.parent.parent.joinpath("data", "paralympic_events.csv")
+        events_df = pd.read_csv(event_file)
+
+        # Write the pandas DataFrame contents to the database tables
+        # For the event table we want the pandas index, but it needs to start from 1 and not 0
+        events_df.index += 1
+        events_df.to_sql("event", connection, if_exists="append", index_label='id')
+
+    # Close the database connection
+    connection.close()

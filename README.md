@@ -17,6 +17,9 @@ TODO: No ML model yet in the Flask app.
     - e.g. `pip install -r requirements.txt`
 6. Install the paralympics apps code e.g. `pip install -e .`
 
+## To run each app
+- REST API: `flask --app paralympics_rest run --debug`
+
 ## Activity instructions
 
 There are two versions of the activities. You can complete both, or just the version for the framework you intend

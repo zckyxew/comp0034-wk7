@@ -4,7 +4,7 @@ from typing import List
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from paralympics import db
+from paralympics_rest import db
 
 
 class Region(db.Model):

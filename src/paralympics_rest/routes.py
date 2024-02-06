@@ -1,13 +1,13 @@
 import datetime
 
 from flask import current_app as app, request, abort, jsonify, make_response
-from sqlalchemy import exc
 from marshmallow.exceptions import ValidationError
+from sqlalchemy import exc
 
-from paralympics import db
-from paralympics.models import Region, Event, User
-from paralympics.schemas import RegionSchema, EventSchema, UserSchema
-from paralympics.helpers import token_required, encode_auth_token
+from paralympics_rest import db
+from paralympics_rest.models import Region, Event, User
+from paralympics_rest.schemas import RegionSchema, EventSchema, UserSchema
+from paralympics_rest.utilities import token_required, encode_auth_token
 
 # Flask-Marshmallow Schemas
 regions_schema = RegionSchema(many=True)
@@ -327,4 +327,3 @@ def login():
 
     # Return the token and the user_id of the logged in user
     return make_response(jsonify({"user_id": user.id, "token": token}), 201)
-

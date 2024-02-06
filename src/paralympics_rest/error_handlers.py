@@ -1,4 +1,4 @@
-from flask import json, current_app as app, jsonify, make_response
+from flask import json, current_app as app, jsonify
 from marshmallow.exceptions import ValidationError
 from werkzeug.exceptions import HTTPException
 

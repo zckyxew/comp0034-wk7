@@ -1,9 +1,8 @@
 import os
-from logging.config import dictConfig
 
 from flask import Flask, jsonify
-from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 
 
@@ -35,29 +34,6 @@ ma = Marshmallow()
 
 
 def create_app(test_config=None):
-    # Configure logging
-    # See https://flask.palletsprojects.com/en/3.0.x/logging/#logging
-    # and https://betterstack.com/community/guides/logging/how-to-start-logging-with-flask/
-    dictConfig({
-        'version': 1,
-        'formatters': {'default': {
-            'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
-        }},
-        'handlers':
-            {'wsgi': {
-                'class': 'logging.StreamHandler',
-                'stream': 'ext://flask.logging.wsgi_errors_stream',
-                'formatter': 'default'
-            },
-                "file": {
-                    "class": "logging.FileHandler",
-                    "filename": "paralympics_log.log",
-                    "formatter": "default",
-                },
-            },
-        "root": {"level": "DEBUG", "handlers": ["wsgi", "file"]},
-    })
-
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
 
@@ -65,10 +41,8 @@ def create_app(test_config=None):
         # Generate your own SECRET_KEY using python secrets
         SECRET_KEY='l-tirPCf1S44mWAGoWqWlA',
         # configure the SQLite database, relative to the app instance folder
-        SQLALCHEMY_DATABASE_URI="sqlite:///" + os.path.join(app.instance_path, 'paralympics.sqlite')
+        SQLALCHEMY_DATABASE_URI="sqlite:///" + os.path.join(app.instance_path, 'paralympics_rest.sqlite')
     )
-
-    app.logger.info("The app is starting...")
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -94,16 +68,16 @@ def create_app(test_config=None):
 
     # Models are defined in the models module, so you must import them before calling create_all, otherwise SQLAlchemy
     # will not know about them.
-    from paralympics.models import User, Region, Event
+    from paralympics_rest.models import User, Region, Event
     # Create the tables in the database
     # create_all does not update tables if they are already in the database.
     with app.app_context():
         db.create_all()
 
-        from paralympics.utils import add_data
+        from paralympics_rest.utilities import add_data
         add_data(db)
 
         # Register the routes and custom error handlers with the app in the context
-        from paralympics import routes, error_handlers
+        from paralympics_rest import routes, error_handlers
 
     return app
