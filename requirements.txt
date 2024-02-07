@@ -1,5 +1,6 @@
 # For Flask apps
 Flask
+Flask-WTF
 # For Dash apps
 dash
 dash-bootstrap-components
@@ -9,3 +10,5 @@ Flask-Marshmallow
 Marshmallow-SQLAlchemy
 jwt
 pandas
+# For the Iris ML model app
+# scikit-learn

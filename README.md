@@ -23,13 +23,14 @@ This repository contains 4 apps used in the activities which may cause some conf
 
 Remember to run `pip install -e .`
 
-The 4 apps can be run from the terminal as follows, you may need to use 'py' or 'python3' instead of 'python' depending
+The apps can be run from the terminal as follows, you may need to use 'py' or 'python3' instead of 'python' depending
 on your computer:
 
 - Dash app: `python src/paralympics_dash/paralympics_dash.py`
 - Dash multi-page app: `python src/paralympics_dash_multi/paralympics_app.py`
 - Flask REST API app (coursework 1): `flask --app paralympics_rest run --debug`
 - Flask app: `flask --app paralympics_flask run --debug`
+- Flask ML app (Iris): `flask --app flask_iris:create(app) run --debug`
 
 ## Activity instructions
 

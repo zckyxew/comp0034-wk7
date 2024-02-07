@@ -17,9 +17,7 @@ The paralympics app will have the following pages:
 1. Event page that displays details for given event.
 2. Home page with logos for all the events. When you click on a logo it will display a page for that event.
 3. A page that allows a new event data to be added.
-4. A page that allows a prediction.
-
-TODO: generate some kind of ML model!
+4. A page that includes a chart
 
 This will require:
 
@@ -169,7 +167,8 @@ The `index.html` template is a Jinja template that inherits from the page layout
 4. Pass the data and URLs to a jinja template
 
 Use [Flask-SQLAlchemy query syntax](https://flask-sqlalchemy.palletsprojects.com/en/3.1.x/quickstart/#query-the-data)
-to find the data. The example they use is as follows: 
+to find the data. The example they use is as follows:
+
 ```python
 users = db.session.execute(db.select(User).order_by(User.username)).scalars()
 ```
@@ -198,7 +197,8 @@ You can iterate the data passed to the template using a Jinja for loop e.g.
     {% endfor %}
 ```
 
-For each event you can define the logo using an HTML <img> e.g. `<img src="img_girl.jpg" alt="Girl in a jacket" width="500" height="600">`.
+For each event you can define the logo using an HTML <img>
+e.g. `<img src="img_girl.jpg" alt="Girl in a jacket" width="500" height="600">`.
 The src is the file location which you can determine using the file name format `{event.year}_{event.host}.png`
 and the URL using the flask url_for url_for('static', filename=f'img/{logo_file}')
 
@@ -227,7 +227,6 @@ Use a column/row style layout again.
 {% endblock %}
 ```
 
-
 ### Run the app
 
 Run the flask app and check that the route works.
@@ -245,3 +244,22 @@ Add a page to edit an existing event.
 3. Verify that any changes meet the validation criteria.
 4. Update the database with the changes.
 5. Display the event page with the edited data.
+
+## Page that returns a prediction
+
+There is no ML model for the paralympics app so this example creates a simple one-page Flask app with a form to predict
+the species of Iris.
+
+The code in the src/flask_iris directory structure creates a basic Flask app that includes a form to get a prediction
+from a pickled model.
+
+There is a form defined in [/src/flask_iris/forms.py](../src/flask_iris/forms.py) which 4 fields for each value required
+to get a prediction.
+
+There is a single route in [src/flask_iris/routes.py](../src/flask_iris/routes.py) which on GET returns a form, and on
+POST if all the fields of the form have been completed .
+
+The code to generate the model is in [/src/flask_iris/create_ml_model.py](../src/flask_iris/create_ml_model.py).
+
+To run the app: `flask --app flask_iris:create(app) run --debug`
+
