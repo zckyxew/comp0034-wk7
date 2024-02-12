@@ -1,55 +1,10 @@
-# Plotly Dash version of the activities: Creating and adding charts to a Dash app layout
+# 1. Line chart
 
-The text below assumes you are using the single page app in paralympics_dash. You could instead apply the same to the
-multi-page app in paralympics_dash_multi editing the layouts in the pages rather than the main dashboard python file.
+| Activity                           | Chart type | Data access method | Chart library  |
+|:-----------------------------------|:-----------|:-------------------|:---------------|
+| [Activity 1](dash-1-line-chart.md) | Line chart | pandas / .csv      | Plotly Express |
 
-## Check the Dash app runs
-
-1. `python src/paralympics_dash/paralympics_dash.py`
-2. Go to the URL that is shown in the terminal. By default, this is <http://127.0.0.1:8050>.
-3. Stop the app using `CTRL+C`
-
-## Introduction
-
-In this activity you will learn to create and add charts to a Dash app layout. You will then replace the chart images
-you added to the chart last week with charts.
-
-Next week you will add the callback functionality that will allow the charts to be dynamically updated.
-
-Plotly graphing library for Python (NOT the version for JavaScript) can be accessed through two libraries, Plotly
-Express and Plotly Go. Plotly Express API provides Python classes and functions to create most types of charts, and in
-most cases will be sufficient for the coursework. Sometimes you may need to edit aspects of a chart that isn't available
-through Express functions, and then you need to use Go instead. Many of the
-chart examples in the [Plotly documentation](https://plotly.com/python/) start with an Express example, then show
-features that require Go, and include a version that can be added to a Dash app.
-
-The Plotly documentation shows examples of code for many types of chart, however this assumes you already know the type
-of chart you want to create. To help you decide which type of chart may be suited to your particular data and audience,
-then try one of the many tools to help you select the type of chart/data visualisation:
-
-- [Data Visualisation Catalogue](https://datavizcatalogue.com/index.html)
-- [Depict Data Studio](https://depictdatastudio.com/charts/)
-- [Page with links to other chart choosers](https://coolinfographics.com/dataviz-guides)
-
-This activity covers the following data visualisations:
-
-1. Line chart (data access: .csv, plotly library: Plotly Express)
-2. Bar chart (data access: .csv, plotly library: Plotly Express)
-3. Scatter Mapbox, map with markers (data access: SQLite, plotly library: Plotly Go)
-4. Summary statistics presented in card format (data access: REST API)
-
-The examples use different ways to access the data. The purpose of this is to introduce different ways of accessing the
-data. For your coursework you don't need to do this, pick one method to use.
-
-The general approach to create and add a chart to a Dash application is:
-
-1. Access the required data
-2. Create a chart object using the data
-3. Add the chart object to the Dash app layout
-
-## 1. Line chart
-
-### Create a line chart using pandas and Plotly Express
+## Create the chart
 
 Add a line chart that displays for each paralympics the total number of events, competitors and
 sports. The data will be displayed over time, i.e. from 1960 through to 2022.
@@ -397,7 +352,8 @@ This is optional for those that want to try and challenge themselves. There is n
 - Add the chart to a dcc.Graph() element in one of the columns you created.
 
 Rather than using a card to display the statistics, create
-a [table](https://dash-bootstrap-components.opensource.faculty.ai/docs/components/table/) instead (or as well). Add different event
+a [table](https://dash-bootstrap-components.opensource.faculty.ai/docs/components/table/) instead (or as well). Add
+different event
 attributes to what was used in the Card example.
 
 

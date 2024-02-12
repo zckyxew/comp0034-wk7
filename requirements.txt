@@ -1,6 +1,7 @@
 # For Flask apps
 Flask
 Flask-WTF
+WTForms-SQLAlchemy
 # For Dash apps
 dash
 dash-bootstrap-components

@@ -34,8 +34,31 @@ on your computer:
 
 ## Activity instructions
 
-There are two versions of the activities. You can complete both, or just the version for the framework you intend
+There are two sets of activities. You can complete both, or just the version for the framework you intend
 to use for coursework 2.
 
-1. [Dash activities](activities/1-dash.md)
-2. [Flask activities](activities/1-flask.md)
+### Dash activities
+
+**The activities are designed to be completed in order**, skills are introduced in an activity and specific instructions
+are not then repeated in subsequent activities.
+
+| Activity                                        | Chart type                                       | Data access method       | Chart library  |
+|:------------------------------------------------|:-------------------------------------------------|:-------------------------|:---------------|
+| [Introduction](/activities/dash-0-intro.md)     |                                                  |                          |                |
+| [Activity 1](/activities/dash-1-line-chart.md)  | Line chart                                       | pandas / .csv            | Plotly Express |
+| [Activity 2](/activities/dash-2-bar-chart.md)   | Bar chart                                        | pandas / .csv            | Plotly Express |
+| [Activity 3](/activities/dash-3-scatter-map.md) | Scatter Mapbox, map with markers                 | pandas / SQLite database | Plotly Go      |
+| [Activity 4](/activities/dash-4-stats-card.md)  | Summary statistics presented in a Bootstrap card | pandas / REST API        | None           |
+
+### Flask activities
+
+**The activities are designed to be completed in order**, skills are introduced in an activity and specific instructions
+are not then repeated in subsequent activities.
+
+| Activity                                        | Data access | Jinja template | Form |
+|:------------------------------------------------|:------------|:---------------|:-----|
+| [Introduction](/activities/flask-0-intro.md)    |             |                |      |
+| [Activity 1](/activities/flask-1-event-page.md) |             |                |      |
+| [Activity 2](/activities/flask-2-home-page.md)  |             |                |      |
+| [Activity 3](/activities/flask-3-chart-page.md) |             |                |      |
+| [Activity 4](/activities/flask-1-event-page.md) |             |                |      |
