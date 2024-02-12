@@ -11,7 +11,7 @@ In week 2 we looked at creating a database using SQLite. One method is to use th
 connection and create a cursor to execute queries. The following code uses pandas to read from a SQLite database.
 
 ```python
-paralympic_db = Path(__file__).parent.joinpath("paralympics.sqlite")
+paralympic_db = Path(__file__).parent.joinpath("paralympics_dash.sqlite")
 
 
 def scatter_geo():
