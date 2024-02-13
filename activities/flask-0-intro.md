@@ -8,7 +8,6 @@ the https://www.paralympic.org website.
 - Event page that displays details for given event.
 - Home page with logos for all the events. When you click on a logo it will display a page for that event.
 - Chart page that displays a line chart.
--
 
 Pages involving forms are introduced in week 8:
 
