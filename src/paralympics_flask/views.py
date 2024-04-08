@@ -9,7 +9,7 @@ def index():
     Returns the home page.
 """
     # Query the database to get all the events and arrange in date order
-    events = db.session.execute(db.select(Event)).order_by(Event.year).scalars()
+    events = db.session.execute(db.select(Event).order_by(Event.year)).scalars()
     return render_template('index.html', events=events)
 
 
